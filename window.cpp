@@ -1,7 +1,7 @@
 #include <glad/glad.h>
 #include "window.h"
 
-Window::Window(char const * winName,int maj, int min, int w, int l, bool iFL)
+Window::Window(char const * winName,short maj, short min, int w, int l, bool iFL)
 {
 	this->majContext = maj;
 	this->minContext = min;
@@ -40,6 +40,16 @@ void Window::input()
 	glfwPollEvents();
 
 	if (glfwGetKey(this->display, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(this->display, 1);
+}
+
+double Window::getTime()
+{
+	return glfwGetTime();
+}
+
+double Window::getDeltaTime()
+{
+	return 0.0;
 }
 
 

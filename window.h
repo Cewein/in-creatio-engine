@@ -8,24 +8,37 @@ using std::cout;
 
 class Window
 {
-public:
-	Window() {}
-	Window(char const * winName, int maj, int min, int w, int l, bool iFL);
-
+private:
 	//openGl context
-	int minContext;
-	int majContext;
+	short minContext;
+	short majContext;
 
 	//windows info
 	int width;
 	int length;
-	bool isFullScreen;
 	char * winName;
 
-	//window struct
+public:
+
+	//public info
+	bool isFullScreen;
 	GLFWwindow * display;
 
+	//constuctor
+	Window() {}
+	Window(char const * winName, short maj, short min, int w, int l, bool iFL);
+
 	void input();
+	double getTime();
+	double getDeltaTime();
+
+	
+	//getters and setters, they are inline because they are small function
+	inline short getMinContext() { return this->minContext; }
+	inline short getMajContext() { return this->majContext; }
+	inline int getWidth() { return this->width; }
+	inline int getLength() { return this->length; }
+	inline char * getName() { return this->winName; }
 };
 
 
