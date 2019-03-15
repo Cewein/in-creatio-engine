@@ -18,6 +18,9 @@ private:
 	int length;
 	char * winName;
 
+	double pastTime = 0;
+	double actualTime;
+
 public:
 
 	//public info
@@ -28,8 +31,8 @@ public:
 	Window() {}
 	Window(char const * winName, short maj, short min, int w, int l, bool iFL);
 
-	void input();
-	double getTime();
+	//void input();
+	inline double getTime() { return glfwGetTime(); };
 	double getDeltaTime();
 
 	
@@ -39,7 +42,11 @@ public:
 	inline int getWidth() { return this->width; }
 	inline int getLength() { return this->length; }
 	inline char * getName() { return this->winName; }
+
+	inline void setName(char * newName) { this->winName = newName; }
 };
 
 
 #endif // !window
+
+

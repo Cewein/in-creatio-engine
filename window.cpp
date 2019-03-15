@@ -34,22 +34,24 @@ Window::Window(char const * winName,short maj, short min, int w, int l, bool iFL
 
 }
 
-void Window::input()
-{
-	glfwSwapBuffers(this->display);
-	glfwPollEvents();
-
-	if (glfwGetKey(this->display, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(this->display, 1);
-}
-
-double Window::getTime()
-{
-	return glfwGetTime();
-}
+//void Window::input()
+//{
+//	glfwSwapBuffers(this->display);
+//	glfwPollEvents();
+//
+//	if (glfwGetKey(this->display, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(this->display, 1);
+//}
 
 double Window::getDeltaTime()
 {
-	return 0.0;
+	double delta = 0;
+	actualTime = this->getTime();
+	if (this->pastTime)
+	{
+		delta = actualTime - pastTime;
+	}
+	pastTime = this->getTime();
+	return delta;
 }
 
 
