@@ -9,6 +9,8 @@ int main()
 	Input input(window);
 
 	glViewport(0, 0, window.getWidth(), window.getLength());
+
+	//render loop
 	while (!glfwWindowShouldClose(window.display))
 	{
 		input.pollEvent();

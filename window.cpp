@@ -1,6 +1,14 @@
 #include <glad/glad.h>
 #include "window.h"
 
+/*
+this is a constuctor for the windows class
+- winName : windows name
+- maj and min : actual version of openGL
+- w : width of the window
+- l : lenght of the window
+- iFL : to know if it's full screen
+*/
 Window::Window(char const * winName,short maj, short min, int w, int l, bool iFL)
 {
 	this->majContext = maj;
@@ -34,14 +42,8 @@ Window::Window(char const * winName,short maj, short min, int w, int l, bool iFL
 
 }
 
-//void Window::input()
-//{
-//	glfwSwapBuffers(this->display);
-//	glfwPollEvents();
-//
-//	if (glfwGetKey(this->display, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(this->display, 1);
-//}
-
+//this is delta time is in second
+//it's calculated timeActualFrame - timeLastFrame 
 double Window::getDeltaTime()
 {
 	double delta = 0;
