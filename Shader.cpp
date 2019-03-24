@@ -1,22 +1,33 @@
 #pragma warning(disable : 4996)
 #include <glad/glad.h>
+#include "utils.h"
 #include "Shader.h"
 
 
 
-Shader::Shader(size_t * vtxPtr, size_t * frgPtr, size_t * ShaderPtr, char * vertexShader, char * fragShader)
+Shader::Shader(char * vertexShader, char * fragShader)
 {
-	vertexPtr = vtxPtr;
-	fragmentPtr = frgPtr;
-	ShaderProgramPtr = ShaderPtr;
+	//make file stream
+	FILE * vertex = NULL;
+	vertex = fopen(vertexShader, "rb");
+	FILE * fragment = NULL;
+	fragment = fopen(fragShader, "rb");
 
-	createVertexShader(vertexShader);
-	createFragmentShader(fragShader);
-}
+	//check if file as been read
+	if (vertex != NULL && fragment != NULL)
+	{
+		createVertexShader(freadInArray(vertex));
+		createFragmentShader(freadInArray(fragment));
+		createProgramShader();
 
+		//close file stream
+		fclose(vertex);
+		fclose(fragment);
 
-Shader::~Shader()
-{
+		//delete shader because the are compiled in the program
+		glDeleteShader(vertexPtr);
+		glDeleteShader(fragmentPtr);
+	}
 }
 
 //this function is for debugging and compilation validation of frag and vertex shader
@@ -49,27 +60,38 @@ bool Shader::programCompliStat(size_t program, const char * programName)
 	return true;
 }
 
-//this function create a Vertex Shader it just to know were is the shader File
-void Shader::createVertexShader(const char * vertexShader)
+// this create a shader program, it need to be done avec creating a vertex and a fragment shader
+void Shader::createProgramShader()
 {
-	*vertexPtr = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(*vertexPtr, 1, &vertexShader, NULL);
-	glCompileShader(*vertexPtr);
+	shaderProgramPtr = glCreateProgram();
+	glAttachShader(shaderProgramPtr, vertexPtr);
+	glAttachShader(shaderProgramPtr, fragmentPtr);
+	glLinkProgram(shaderProgramPtr);
 
-	if (!shaderCompilStat(*vertexPtr, "VERTEX SHADER"))
+	programCompliStat(shaderProgramPtr, "SHADER LINK PROGRAM");
+}
+
+//this function create a Vertex Shader it just the shader File data
+void Shader::createVertexShader(char * vertexShader)
+{
+	vertexPtr = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexPtr, 1, &vertexShader, NULL);
+	glCompileShader(vertexPtr);
+
+	if (!shaderCompilStat(vertexPtr, "VERTEX SHADER"))
 	{
 		//need to do error output
 	}
 }
 
-//this function create a Fragment Shader it just to know were is the shader File
-void Shader::createFragmentShader(const char * fragmentShader)
+//this function create a Fragment Shader it just to know the shader File data
+void Shader::createFragmentShader(char * fragmentShader)
 {
-	*fragmentPtr = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(*fragmentPtr, 1, &fragmentShader, NULL);
-	glCompileShader(*fragmentPtr);
+	fragmentPtr = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentPtr, 1, &fragmentShader, NULL);
+	glCompileShader(fragmentPtr);
 
-	if(!shaderCompilStat(*fragmentPtr, "FRAGMENT SHADER"))
+	if(!shaderCompilStat(fragmentPtr, "FRAGMENT SHADER"))
 	{
 		//need to do error output
 	}
