@@ -1,11 +1,10 @@
 #pragma warning(disable : 4996)
-#include <glad/glad.h>
 #include "utils.h"
 #include "Shader.h"
 
 
 
-Shader::Shader(char * vertexShader, char * fragShader)
+Shader::Shader(const char * vertexShader, const char * fragShader)
 {
 	//make file stream
 	FILE * vertex = NULL;
@@ -39,7 +38,7 @@ bool Shader::shaderCompilStat(size_t shader, const char * shaderName)
 	if (!success)
 	{
 		glGetProgramInfoLog(shader, 512, NULL, infoLog);
-		printf("ERROR [%s] DID NOT COMPILE!\n%s\n", shaderName, infoLog);
+		printf("ERROR [%s] DID NOT COMPILE!\n", shaderName);
 		return false;
 	}
 	return true;

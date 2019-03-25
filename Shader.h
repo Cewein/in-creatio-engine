@@ -1,4 +1,5 @@
 #pragma once
+#include <glad/glad.h>
 #include <glm/glm.hpp>
 
 using namespace glm;
@@ -39,7 +40,7 @@ public:
 	//usage function
 	inline void use() { glUseProgram(shaderProgramPtr); }
 
-	Shader(char * vertexShader, char * fragShader);
+	Shader(const char * vertexShader, const char * fragShader);
 
 	//shoud we need a destructor ?
 };

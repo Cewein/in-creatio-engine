@@ -1,6 +1,7 @@
 #pragma once
 #ifndef WINDOWH
 #define WINDOWH
+#include <glad/glad.h>
 #include <iostream>
 #include <GLFW/glfw3.h>
 
