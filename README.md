@@ -16,11 +16,16 @@ the architecture for the engine look like this :
 here a list of all the feature of In Creatio engine
 
 - Input detection
+- GLSL Shader usage
+
+### Working on
+
+- 3d object creation
 
 ### Futre plan
 
 - add a GUI
 - add a commande line debugger
 - add loading and file managing
-- 3d object creation
 - a nice loading screen
+- file multi threading
