@@ -2,8 +2,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#define 
-if(GL_VERTEX_SHAD)
+#define NO_SHADER_USED 1
 
 using namespace glm;
 

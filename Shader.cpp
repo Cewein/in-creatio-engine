@@ -79,18 +79,19 @@ void Shader::createShader(char * shader, int macro)
 	{
 		shaderPtr = &vertexPtr;
 		*shaderPtr = glCreateShader(macro);
-
 	}
 	else if (macro == GL_FRAGMENT_SHADER)
 	{
 		shaderPtr = &fragmentPtr;
 		*shaderPtr = glCreateShader(macro);
 	}
+	else exit(NO_SHADER_USED);
+	
 
 	glShaderSource(*shaderPtr, 1, &shader, NULL);
 	glCompileShader(*shaderPtr);
 
-	if (!shaderCompilStat(*shaderPtr, "VERTEX SHADER"))
+	if (!shaderCompilStat(*shaderPtr, macro == GL_FRAGMENT_SHADER ? "VERTEX SHADER" : "FRAGMENT SHADER"))
 	{
 		//need to do error output
 	}
