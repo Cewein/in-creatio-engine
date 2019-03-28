@@ -2,6 +2,9 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
+#define 
+if(GL_VERTEX_SHAD)
+
 using namespace glm;
 
 class Shader
@@ -18,8 +21,7 @@ private:
 public:
 
 	//shader creation function
-	void createVertexShader(char * vertexShader);
-	void createFragmentShader(char * fragmentShader);
+	void createShader(char * shader, int macro);
 	void createProgramShader();
 
 	//getter and setter
