@@ -3,7 +3,7 @@
 #include "window.h"
 #include "Input.h"
 #include "Shader.h"
-#include "Object3D.h"
+#include "Object.h"
 
 
 
@@ -15,12 +15,12 @@ int main()
 	Shader shader("shader/vertex.glsl", "shader/fragment.glsl");
 
 	float vertices[] = {
-	-0.5f, -0.5f, 0.0f,
-	 0.5f, -0.5f, 0.0f,
-	 0.0f,  0.5f, 0.0f
-	};
+		-0.5f, -0.5f, 0.0f, // left  
+		 0.5f, -0.5f, 0.0f, // right 
+		 0.0f,  0.5f, 0.0f  // top   
+	}; ;
 
-	Object3D tris(vertices, 3);
+	Object tris(vertices, 3);
 
 	//render loop
 	glViewport(0, 0, window.getWidth(), window.getLength());
@@ -32,9 +32,12 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		shader.use();
-		tris.show();
+		//tris.show();
 
-		//std::cout << window.getDeltaTime() << " s\n";
+		glBindVertexArray(tris.getVAO());
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		std::cout << window.getDeltaTime() << " s\n";
 	}
 	glfwTerminate();
 	return 0;

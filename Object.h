@@ -1,6 +1,6 @@
 #pragma once
 #include <glad/glad.h>
-class Object3D
+class Object
 {
 private:
 	size_t VAO;
@@ -11,13 +11,12 @@ private:
 
 public:
 
-	Object3D(float * vecArray, int nbOfFaces);
+	Object(float * vecArray, int nbOfFaces);
 
 	//getter
-	inline size_t getVOA() { return VAO; }
+	inline size_t getVAO() { return VAO; }
 	inline size_t getVBO() { return VBO; }
 
 	//render the object
 	void show();
 };
-
