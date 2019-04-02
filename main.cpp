@@ -32,10 +32,7 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		shader.use();
-		//tris.show();
-
-		glBindVertexArray(tris.getVAO());
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		tris.show();
 
 		std::cout << window.getDeltaTime() << " s\n";
 	}

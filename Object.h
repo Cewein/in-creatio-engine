@@ -6,12 +6,12 @@ private:
 	size_t VAO;
 	size_t VBO;
 
-	int numberOfFaces;
+	int numberOfVertices;
 
 
 public:
 
-	Object(float * vecArray, int nbOfFaces);
+	Object(float * vecArray, int nbOfVertices);
 
 	//getter
 	inline size_t getVAO() { return VAO; }
