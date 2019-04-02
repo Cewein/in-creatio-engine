@@ -23,7 +23,7 @@ Shader::Shader(const char * vertexShader, const char * fragShader)
 		fclose(vertex);
 		fclose(fragment);
 
-		//delete shader because the are compiled in the program
+		//delete shader because they are compiled in the GPU program
 		glDeleteShader(vertexPtr);
 		glDeleteShader(fragmentPtr);
 	}
