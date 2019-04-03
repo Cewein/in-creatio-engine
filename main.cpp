@@ -15,12 +15,17 @@ int main()
 	Shader shader("shader/vertex.glsl", "shader/fragment.glsl");
 
 	float vertices[] = {
-		-0.5f, -0.5f, 0.0f, // left  
-		 0.5f, -0.5f, 0.0f, // right 
-		 0.0f,  0.5f, 0.0f  // top   
-	}; ;
+		// first triangle
+		 0.5f,  0.5f, 0.0f,  // top right
+		 0.5f, -0.5f, 0.0f,  // bottom right
+		-0.5f,  0.5f, 0.0f,  // top left 
+		// second triangle
+		 0.5f, -0.5f, 0.0f,  // bottom right
+		-0.5f, -0.5f, 0.0f,  // bottom left
+		-0.5f,  0.5f, 0.0f   // top left
+	};
 
-	Object tris(vertices, 3);
+	Object tris(vertices, 6);
 
 	//render loop
 	glViewport(0, 0, window.getWidth(), window.getLength());
@@ -34,7 +39,8 @@ int main()
 		shader.use();
 		tris.show();
 
-		std::cout << window.getDeltaTime() << " s\n";
+
+		//std::cout << window.getDeltaTime() << " s\n";
 	}
 	glfwTerminate();
 	return 0;
