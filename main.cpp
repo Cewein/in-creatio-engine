@@ -10,19 +10,19 @@
 int main()
 {
 
-	Window window("test", 4, 5, 500, 500, false);
+	Window window("test", 4, 5, 800, 800, false);
 	Input input(window);
-	Shader shader("shader/vertex.glsl", "shader/fragment.glsl");
+	Shader bob("shader/vertex.glsl", "shader/nice.glsl");
 
 	float vertices[] = {
 		// first triangle
-		 0.5f,  0.5f, 0.0f,  // top right
-		 0.5f, -0.5f, 0.0f,  // bottom right
-		-0.5f,  0.5f, 0.0f,  // top left 
+		 1.f,  1.f, 0.0f,  // top right
+		 1.f, -1.f, 0.0f,  // bottom right
+		-1.f,  1.f, 0.0f,  // top left 
 		// second triangle
-		 0.5f, -0.5f, 0.0f,  // bottom right
-		-0.5f, -0.5f, 0.0f,  // bottom left
-		-0.5f,  0.5f, 0.0f   // top left
+		 1.f, -1.f, 0.0f,  // bottom right
+		-1.f, -1.f, 0.0f,  // bottom left
+		-1.f,  1.0f, 0.0f   // top left
 	};
 
 	Object tris(vertices, 6);
@@ -36,7 +36,15 @@ int main()
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		shader.use();
+		bob.use();
+		bob.setVec3((char *)"iResolution", (float)window.getWidth(), (float)window.getLength(), 0.f);
+		bob.setFloat((char *)"iTime", window.getTime());
+
+		tris.rotate(window.getDeltaTime()*10, vec3(0.f, 0.f, 1.f));
+		//tris.scale(vec3(0.5f,0.5f,0.5f));
+
+		mat4 tmp = tris.getTrans();
+		bob.setMat4((char *)"transform", tmp);
 		tris.show();
 
 
