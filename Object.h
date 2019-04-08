@@ -14,10 +14,10 @@ private:
 	size_t VBO;
 
 	int numberOfVertices;
+	mat4 transform;
 
 public:
 
-	mat4 transform;
 
 	Object(float * vecArray, int nbOfVertices);
 
@@ -27,8 +27,10 @@ public:
 	inline mat4 getTrans() { return transform; }
 
 	//small math like transform, rotate, scale, ect...
+	inline void start() { transform = mat4(1.0f); }
 	inline void rotate(float degree, vec3 rotate) { transform = glm::rotate(transform, glm::radians(degree), rotate); };
 	inline void scale(vec3 scale) { transform = glm::scale(transform, scale); }
+	inline void translate(vec3 translate) { transform = glm::translate(transform, translate); }
 
 	//render the object
 	void show();

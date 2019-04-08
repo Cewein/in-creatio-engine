@@ -12,7 +12,7 @@ int main()
 
 	Window window("test", 4, 5, 800, 800, false);
 	Input input(window);
-	Shader bob("shader/vertex.glsl", "shader/nice.glsl");
+	Shader bob("shader/vertex.glsl", "shader/square.glsl");
 
 	float vertices[] = {
 		// first triangle
@@ -33,22 +33,24 @@ int main()
 	{
 		input.pollEvent();
 
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		bob.use();
 		bob.setVec3((char *)"iResolution", (float)window.getWidth(), (float)window.getLength(), 0.f);
 		bob.setFloat((char *)"iTime", window.getTime());
 
-		tris.rotate(window.getDeltaTime()*10, vec3(0.f, 0.f, 1.f));
-		//tris.scale(vec3(0.5f,0.5f,0.5f));
+		tris.start();
+		tris.translate(vec3(0.5f, sin(window.getTime()), 0.f));
+		tris.rotate(window.getTime(), vec3(0.f, 0.f, 1.f));
+		tris.scale(vec3(0.5f));
 
-		mat4 tmp = tris.getTrans();
-		bob.setMat4((char *)"transform", tmp);
+		bob.setMat4((char *)"transform", tris.getTrans());
 		tris.show();
 
 
-		//std::cout << window.getDeltaTime() << " s\n";
+		std::cout << 1/window.getDeltaTime() << " FPS\n";
+		system("cls");
 	}
 	glfwTerminate();
 	return 0;
