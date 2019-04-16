@@ -75,17 +75,12 @@ void Shader::createProgramShader()
 void Shader::createShader(char * shader, int macro)
 {
 	size_t * shaderPtr;
-	if (macro == GL_VERTEX_SHADER)
-	{
-		shaderPtr = &vertexPtr;
-		*shaderPtr = glCreateShader(macro);
-	}
-	else if (macro == GL_FRAGMENT_SHADER)
-	{
-		shaderPtr = &fragmentPtr;
-		*shaderPtr = glCreateShader(macro);
-	}
+
+	if (macro == GL_VERTEX_SHADER) shaderPtr = &vertexPtr;
+	else if (macro == GL_FRAGMENT_SHADER) shaderPtr = &fragmentPtr;
 	else exit(NO_SHADER_USED);
+
+	*shaderPtr = glCreateShader(macro);
 	
 
 	glShaderSource(*shaderPtr, 1, &shader, NULL);

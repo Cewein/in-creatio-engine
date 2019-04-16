@@ -43,14 +43,13 @@ int main()
 		tris.start();
 		tris.translate(vec3(0.5f, sin(window.getTime()), 0.f));
 		tris.rotate(window.getTime(), vec3(0.f, 0.f, 1.f));
-		tris.scale(vec3(0.5f));
+		tris.scale(vec3(0.1f));
 
 		bob.setMat4((char *)"transform", tris.getTrans());
 		tris.show();
 
 
 		std::cout << 1/window.getDeltaTime() << " FPS\n";
-		system("cls");
 	}
 	glfwTerminate();
 	return 0;

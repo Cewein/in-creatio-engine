@@ -12,18 +12,20 @@ class Object
 private:
 	size_t VAO;
 	size_t VBO;
+	size_t VEO;
 
 	int numberOfVertices;
 	mat4 transform;
 
 public:
 
-
+	//need to be work on, more way to create a objet. with texture, or else
 	Object(float * vecArray, int nbOfVertices);
 
 	//getter
 	inline size_t getVAO() { return VAO; }
 	inline size_t getVBO() { return VBO; }
+	inline size_t getVEO() { return VEO; }
 	inline mat4 getTrans() { return transform; }
 
 	//small math like transform, rotate, scale, ect...
@@ -31,6 +33,7 @@ public:
 	inline void rotate(float degree, vec3 rotate) { transform = glm::rotate(transform, glm::radians(degree), rotate); };
 	inline void scale(vec3 scale) { transform = glm::scale(transform, scale); }
 	inline void translate(vec3 translate) { transform = glm::translate(transform, translate); }
+	inline Object clone() { return * this; } //not sure about this one...
 
 	//render the object
 	void show();
