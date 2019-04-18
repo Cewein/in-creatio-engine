@@ -25,6 +25,12 @@ int main()
 		-1.f,  1.0f, 0.0f   // top left
 	};
 
+	float texCoords[] = {
+	0.0f, 0.0f,  // lower-left corner  
+	1.0f, 0.0f,  // lower-right corner
+	0.5f, 1.0f   // top-center corner
+	};
+
 	Object tris(vertices, 6);
 
 	//render loop
