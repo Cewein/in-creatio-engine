@@ -3,6 +3,8 @@
 
 Object::Object(float * vecArray, int nbOfVertices)
 {
+
+	//vertex binding
 	numberOfVertices = nbOfVertices;
 	transform = glm::mat4(1.0f);
 
@@ -18,6 +20,13 @@ Object::Object(float * vecArray, int nbOfVertices)
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+
+	//other
+	texture = Texture(); //empty
+}
+
+Object::Object(float * vecArray, float * index, int nbOfVertices)
+{
 }
 
 void Object::show()

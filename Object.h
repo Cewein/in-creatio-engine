@@ -5,6 +5,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 
+#include "Texture.h"
+
 using namespace glm;
 
 class Object
@@ -14,6 +16,8 @@ private:
 	size_t VBO;
 	size_t VEO;
 
+	Texture texture;
+
 	int numberOfVertices;
 	mat4 transform;
 
@@ -21,6 +25,7 @@ public:
 
 	//need to be work on, more way to create a objet. with texture, or else
 	Object(float * vecArray, int nbOfVertices);
+	Object(float * vecArray,float * index, int nbOfVertices);
 
 	//getter
 	inline size_t getVAO() { return VAO; }
