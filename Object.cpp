@@ -4,6 +4,8 @@
 Object::Object(float * vecArray, int nbOfVertices)
 {
 	numberOfVertices = nbOfVertices;
+	transform = glm::mat4(1.0f);
+
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glBindVertexArray(VAO);
