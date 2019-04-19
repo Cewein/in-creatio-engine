@@ -22,7 +22,7 @@ public:
 	//empty texture when none is loaded
 	inline Texture() {};
 
-	Texture(char * texturePath, bool flipImage);
+	Texture(const char * texturePath, bool flipImage);
 
 	//getter
 	inline size_t getID() { return id; }

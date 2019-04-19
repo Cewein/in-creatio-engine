@@ -25,13 +25,18 @@ public:
 
 	//need to be work on, more way to create a objet. with texture, or else
 	Object(float * vecArray, int nbOfVertices);
+	Object(float * vecArray, int nbOfVertices, Texture tex);
 	Object(float * vecArray,float * index, int nbOfVertices);
 
-	//getter
+	//getter and setter
 	inline size_t getVAO() { return VAO; }
 	inline size_t getVBO() { return VBO; }
 	inline size_t getVEO() { return VEO; }
 	inline mat4 getTrans() { return transform; }
+	inline Texture getTex() { return texture; }
+
+	inline void setTrans(glm::mat4 newTrans) { transform = newTrans; }
+	inline void setTexture(Texture tex) { texture = tex; }
 
 	//small math like transform, rotate, scale, ect...
 	inline void start() { transform = mat4(1.0f); }

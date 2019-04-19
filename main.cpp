@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "Shader.h"
 #include "Object.h"
+#include "Camera.h"
 
 
 
@@ -12,26 +13,56 @@ int main()
 
 	Window window("test", 4, 5, 800, 800, false);
 	Input input(window);
-	Shader bob("shader/vertex.glsl", "shader/square.glsl");
+	Shader tex("shader/vertex.glsl", "shader/texture.glsl");
 
 	float vertices[] = {
-		// first triangle
-		 1.f,  1.f, 0.0f,  // top right
-		 1.f, -1.f, 0.0f,  // bottom right
-		-1.f,  1.f, 0.0f,  // top left 
-		// second triangle
-		 1.f, -1.f, 0.0f,  // bottom right
-		-1.f, -1.f, 0.0f,  // bottom left
-		-1.f,  1.0f, 0.0f   // top left
+		// positions          // normals           // texture coords
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
+		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
+		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+
+		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+
+		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+
+		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+
+		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+		 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
+		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
 	};
 
-	float texCoords[] = {
-	0.0f, 0.0f,  // lower-left corner  
-	1.0f, 0.0f,  // lower-right corner
-	0.5f, 1.0f   // top-center corner
-	};
-
-	Object tris(vertices, 6);
+	Texture cobble("texture/1.png", false);
+	Object cube(vertices, 36, cobble);
+	Camera cam(window.getWidth(), window.getLength());
 
 	//render loop
 	glViewport(0, 0, window.getWidth(), window.getLength());
@@ -39,20 +70,32 @@ int main()
 	{
 		input.pollEvent();
 
-		glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		{
+			glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+			glEnable(GL_DEPTH_TEST);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		}
 
-		bob.use();
-		bob.setVec3((char *)"iResolution", (float)window.getWidth(), (float)window.getLength(), 0.f);
-		bob.setFloat((char *)"iTime", window.getTime());
+		tex.use();
+		tex.setVec3((char *)"iResolution", (float)window.getWidth(), (float)window.getLength(), 0.f);
+		tex.setFloat((char *)"iTime", window.getTime());
 
-		tris.start();
-		tris.translate(vec3(0.5f, sin(window.getTime()), 0.f));
-		tris.rotate(window.getTime(), vec3(0.f, 0.f, 1.f));
-		tris.scale(vec3(0.1f));
+		cube.start();
+		//cube.rotate(window.getTime() * 10, vec3(5.f, 1.f, 1.f));
 
-		bob.setMat4((char *)"transform", tris.getTrans());
-		tris.show();
+		tex.setMat4((char *)"transform", cube.getTrans());
+		tex.setInt((char *)"tex",0);
+
+		{
+			float raduis = 10.f;
+			float camX = sin(window.getTime() * 10) * raduis;
+			float camY = cos(window.getTime() * 10) * raduis;
+			cam.setView(glm::lookAt(glm::vec3(camX, 0.f, camY),glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0)));
+		}
+
+		tex.setMat4((char *)"view", cam.getView());
+		tex.setMat4((char *)"projection", cam.getProj());
+		cube.show();
 
 
 		std::cout << 1/window.getDeltaTime() << " FPS\n";

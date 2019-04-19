@@ -3,20 +3,21 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-Texture::Texture(char * texturePath, bool flipImage)
+Texture::Texture(const char * texturePath, bool flipImage)
 {
 	glGenTextures(1, &id);
 	glBindTexture(GL_TEXTURE_2D, id);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	this->flip = flipImage;
 	stbi_set_flip_vertically_on_load(flipImage);
-	unsigned char *data = stbi_load(texturePath, &width, &height, &nbChannel, 0);
+	printf(texturePath);
+	unsigned char * data = stbi_load(texturePath, &width, &height, &nbChannel, 0);
 	if (data)
 	{
 		//printf("nb channel : %d", nbChannels);
