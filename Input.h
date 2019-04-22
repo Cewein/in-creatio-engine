@@ -1,6 +1,7 @@
 #pragma once
 #include "window.h"
 #include "Camera.h"
+#include <vector>
 
 class Input
 {
@@ -14,9 +15,9 @@ private:
 public:
 	Input(Window s);
 
-	void processKeyboardInput(Camera cam);
-	void processMouseInput(Camera cam);
-	void pollEvent(Camera cam);
+	void processKeyboardInput(Camera *cam);
+	void processMouseInput(Camera *cam);
+	void pollEvent(Camera *cam);
 
 
 	//getter and setter

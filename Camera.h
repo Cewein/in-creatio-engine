@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -11,7 +12,7 @@ private:
 	glm::mat4 projection;
 	glm::mat4 view;
 
-	glm::uvec3 position;
+	glm::vec3 position;
 	glm::vec3 front;
 	glm::vec3 up;
 
@@ -30,9 +31,14 @@ public:
 	inline float getSpeed() { return speed; }
 
 	//setter
-	inline void setView(glm::mat4 newView) { view = newView; }
+	inline void setView(glm::mat4 newView) { 
+		view = newView; 
+	}
 	inline void setSpeed(float spd) { speed = spd; }
 
 	//adder
-	inline void addPos(glm::vec3 vec) { position += vec; }
+	inline void addPos(glm::vec3 vec) { 
+		position = position + vec;
+		std::cout << vec.x << vec.y << vec.z << std::endl;
+	}
 };
