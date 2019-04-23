@@ -62,12 +62,12 @@ int main()
 
 	Texture cobble("texture/cobble.png", false);
 	Object cube(vertices, 36, cobble);
-	Camera cam(window.getWidth(), window.getLength());
+	Camera cam(window.getWidth(), window.getHeight());
 	tex.use();
 	tex.setMat4((char *)"projection", cam.getProj());
 
 	//render loop
-	glViewport(0, 0, window.getWidth(), window.getLength());
+	glViewport(0, 0, window.getWidth(), window.getHeight());
 	while (!glfwWindowShouldClose(window.display))
 	{
 		input.pollEvent(&cam);
@@ -81,7 +81,7 @@ int main()
 
 		{
 			tex.use();
-			tex.setVec3((char *)"iResolution", (float)window.getWidth(), (float)window.getLength(), 0.f);
+			tex.setVec3((char *)"iResolution", (float)window.getWidth(), (float)window.getHeight(), 0.f);
 			tex.setFloat((char *)"iTime", window.getTime());
 			tex.setInt((char *)"tex",0);
 			cam.setView(glm::lookAt(cam.getPos(),cam.getPos() + cam.getFront(), cam.getUp()));
