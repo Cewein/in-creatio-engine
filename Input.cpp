@@ -17,9 +17,9 @@ void Input::processKeyboardInput(Camera * cam)
 	cam->setDeltaSpeed(cam->getSpeed() * source.getDeltaTime());
 	if (glfwGetKey(source.display, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(source.display, 1);
 	if (glfwGetKey(source.display, GLFW_KEY_W) == GLFW_PRESS)
-		cam->addPos(cam->getDeltaSpeed() * cam->getUp());
+		cam->addPos(cam->getDeltaSpeed() * cam->getFront());
 	if (glfwGetKey(source.display, GLFW_KEY_S) == GLFW_PRESS)
-		cam->addPos(-(cam->getDeltaSpeed() * cam->getUp()));
+		cam->addPos(-(cam->getDeltaSpeed() * cam->getFront()));
 	if (glfwGetKey(source.display, GLFW_KEY_A) == GLFW_PRESS)
 		cam->addPos(-(glm::normalize(glm::cross(cam->getFront(), cam->getUp())) * cam->getDeltaSpeed()));
 	if (glfwGetKey(source.display, GLFW_KEY_D) == GLFW_PRESS)
@@ -41,15 +41,7 @@ void Input::processMouseInput(Camera * cam)
 		xoffset *= sensivity;
 		yoffset *= sensivity;
 
-		cam->setYaw( cam->getYaw() + xoffset);
-		cam->setPitch(cam->getPitch() + yoffset);
-
-		glm::vec3 front;
-		front.x = cos(glm::radians(cam->getYaw())) * cos(glm::radians(cam->getPitch()));
-		front.y = sin(glm::radians(cam->getPitch()));
-		front.z = sin(glm::radians(cam->getYaw())) * cos(glm::radians(cam->getPitch()));
-		
-		cam->setFront(glm::normalize(front));
+		cam->updateCamMouse(xoffset, yoffset);
 
 		lastX = xpos;
 		lastY = ypos;

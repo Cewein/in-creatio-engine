@@ -39,6 +39,8 @@ Window::Window(char const * winName,short maj, short min, int w, int l, bool iFL
 		exit(1);
 	}
 
+	glfwSetInputMode(this->display, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 }
 
 //this is delta time is in second

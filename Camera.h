@@ -22,6 +22,8 @@ private:
 	float speed;
 	float deltaSpeed;
 
+	void updateFront();
+
 public:
 	Camera(int width, int height);
 
@@ -46,6 +48,7 @@ public:
 	void setPitch(float ptch);
 	inline void setFront(glm::vec3 frnt) { front = frnt; }
 
-	//adder
+	//function
 	void addPos(glm::vec3 vec);
+	void updateCamMouse(float offyw, float offptch);
 };
