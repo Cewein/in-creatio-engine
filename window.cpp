@@ -13,7 +13,7 @@ Window::Window(char const * winName,short maj, short min, int w, int l, bool iFL
 	this->majContext = maj;
 	this->minContext = min;
 	this->width = w;
-	this->length = l;
+	this->height = l;
 	this->isFullScreen = iFL;
 
 	glfwInit();
@@ -21,8 +21,8 @@ Window::Window(char const * winName,short maj, short min, int w, int l, bool iFL
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minContext);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	
-	if(isFullScreen) display = glfwCreateWindow(width, length, winName, glfwGetPrimaryMonitor(), NULL);
-	else display = glfwCreateWindow(width, length, winName, NULL, NULL);
+	if(isFullScreen) display = glfwCreateWindow(width, height, winName, glfwGetPrimaryMonitor(), NULL);
+	else display = glfwCreateWindow(width, height, winName, NULL, NULL);
 
 	if (display == NULL)
 	{
@@ -38,6 +38,8 @@ Window::Window(char const * winName,short maj, short min, int w, int l, bool iFL
 		printf("Failed to initilize GLAD");
 		exit(1);
 	}
+
+	glfwSetInputMode(this->display, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 }
 

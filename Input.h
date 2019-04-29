@@ -8,6 +8,14 @@ class Input
 
 private:
 	Window source;
+
+	float sensivity;
+
+	float xoffset;
+	float yoffset;
+	float lastX;
+	float lastY;
+
 	int mouseX;
 	int mouseY;
 

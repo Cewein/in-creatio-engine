@@ -16,10 +16,15 @@ private:
 	glm::vec3 front;
 	glm::vec3 up;
 
+	float yaw;
+	float pitch;
+
 	float speed;
+	float deltaSpeed;
+
+	void updateFront();
 
 public:
-	glm::vec3 pos;
 	Camera(int width, int height);
 
 	//getter
@@ -27,18 +32,23 @@ public:
 	inline glm::mat4 getProj() { return projection; }
 	inline glm::vec3 getUp() { return up; }
 	inline glm::vec3 getFront() { return front; }
-	inline glm::vec3 getPos() { return pos; }
+	inline glm::vec3 getPos() { return position; }
 	inline float getSpeed() { return speed; }
+	inline float getDeltaSpeed() { return deltaSpeed; }
+	inline float getYaw() { return yaw; }
+
+	//miam miam c'est bon les pitchs
+	inline float getPitch() { return pitch; } 
 
 	//setter
-	inline void setView(glm::mat4 newView) { 
-		view = newView; 
-	}
+	inline void setView(glm::mat4 newView) { view = newView; }
 	inline void setSpeed(float spd) { speed = spd; }
+	inline void setDeltaSpeed(float dspd) { deltaSpeed = dspd; }
+	inline void setYaw(float yw) { yaw = yw; }
+	void setPitch(float ptch);
+	inline void setFront(glm::vec3 frnt) { front = frnt; }
 
-	//adder
-	inline void addPos(glm::vec3 vec) { 
-		position = position + vec;
-		std::cout << vec.x << vec.y << vec.z << std::endl;
-	}
+	//function
+	void addPos(glm::vec3 vec);
+	void updateCamMouse(float offyw, float offptch);
 };

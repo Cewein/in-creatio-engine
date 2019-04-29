@@ -16,7 +16,7 @@ private:
 
 	//windows info
 	int width;
-	int length;
+	int height;
 	char * winName;
 
 	double pastTime = 0;
@@ -41,7 +41,7 @@ public:
 	inline short getMinContext() { return this->minContext; }
 	inline short getMajContext() { return this->majContext; }
 	inline int getWidth() { return this->width; }
-	inline int getLength() { return this->length; }
+	inline int getHeight() { return this->height; }
 	inline char * getName() { return this->winName; }
 
 	inline void setName(char * newName) { this->winName = newName; }

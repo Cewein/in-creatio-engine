@@ -62,12 +62,12 @@ int main()
 
 	Texture cobble("texture/cobble.png", false);
 	Object cube(vertices, 36, cobble);
-	Camera cam(window.getWidth(), window.getLength());
+	Camera cam(window.getWidth(), window.getHeight());
 	tex.use();
 	tex.setMat4((char *)"projection", cam.getProj());
 
 	//render loop
-	glViewport(0, 0, window.getWidth(), window.getLength());
+	glViewport(0, 0, window.getWidth(), window.getHeight());
 	while (!glfwWindowShouldClose(window.display))
 	{
 		input.pollEvent(&cam);
@@ -81,7 +81,7 @@ int main()
 
 		{
 			tex.use();
-			tex.setVec3((char *)"iResolution", (float)window.getWidth(), (float)window.getLength(), 0.f);
+			tex.setVec3((char *)"iResolution", (float)window.getWidth(), (float)window.getHeight(), 0.f);
 			tex.setFloat((char *)"iTime", window.getTime());
 			tex.setInt((char *)"tex",0);
 			cam.setView(glm::lookAt(cam.getPos(),cam.getPos() + cam.getFront(), cam.getUp()));
@@ -89,26 +89,24 @@ int main()
 		}
 
 		{
-			cube.start();
-			tex.setMat4((char *)"transform", cube.getTrans());
-			cube.show();
-			cube.start();
-			cube.translate(glm::vec3(0.f, 3.f, 0.f));
-			tex.setMat4((char *)"transform", cube.getTrans());
-			cube.show();
-			cube.start();
-			cube.translate(glm::vec3(3.f, 0.f, 0.f));
-			tex.setMat4((char *)"transform", cube.getTrans());
-			cube.show();
-			cube.start();
-			cube.translate(glm::vec3(0.f, 0.f, 3.f));
-			tex.setMat4((char *)"transform", cube.getTrans());
-			cube.show();
+			for (int x = -10; x < 10; x++)
+			{
+				for (int y = -10; y < 10; y++)
+				{
+					for (int z = -10; z < 10; z++)
+					{
+						cube.start();
+						cube.translate(glm::vec3(x * 10, y * 10, z * 10));
+						tex.setMat4((char *)"transform", cube.getTrans());
+						cube.show();
+					}
+				}
+			}
 		}
 
 
 
-		//std::cout << 1/window.getDeltaTime() << " FPS\n";
+		std::cout << 1/window.getDeltaTime() << " FPS\n";
 	}
 	glfwTerminate();
 	return 0;
