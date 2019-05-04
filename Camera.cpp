@@ -26,9 +26,16 @@ Camera::Camera(int width, int height)
 
 }
 
-void Camera::addPos(glm::vec3 vec)
+void Camera::update()
 {
-	position = position + vec;
+	Input * input = Input::get();
+	this->position += glm::vec3(input->getkey(UP) * input->getDeltaTime()) * front;
+	this->position -= glm::vec3(input->getkey(DOWN) * input->getDeltaTime()) * front;
+	this->position += glm::normalize(glm::cross(front, up)) * glm::vec3(input->getkey(DOWN) * input->getDeltaTime());
+	this->position -= glm::normalize(glm::cross(front, up)) * glm::vec3(input->getkey(DOWN) * input->getDeltaTime());
+
+	updateCamMouse(input->getOffsetX(), input->getOffsetY());
+
 }
 
 //offyw and offptch are the offset from last mouse pos

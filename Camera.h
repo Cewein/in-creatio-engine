@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Input.h"
+
 #include <iostream>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -18,11 +20,13 @@ private:
 
 	float yaw;
 	float pitch;
+	float sensiblity;
 
 	float speed;
 	float deltaSpeed;
 
 	void updateFront();
+	void updateCamMouse(float offyw, float offptch);
 
 public:
 	Camera(int width, int height);
@@ -49,6 +53,5 @@ public:
 	inline void setFront(glm::vec3 frnt) { front = frnt; }
 
 	//function
-	void addPos(glm::vec3 vec);
-	void updateCamMouse(float offyw, float offptch);
+	void update();
 };
