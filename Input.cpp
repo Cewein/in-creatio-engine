@@ -58,7 +58,7 @@ void Input::pollEvent()
 	glfwPollEvents();
 
 	processKeyboardInput();
-	processMouseInput();
+	//processMouseInput();
 }
 
 float Input::getmouseX()

@@ -90,11 +90,11 @@ int main()
 		}
 
 		{
-			for (int x = -20; x < 20; x++)
+			for (int x = -5; x < 5; x++)
 			{
-				for (int y = -20; y < 20; y++)
+				for (int y = -5; y < 5; y++)
 				{
-					for (int z = -20; z < 20; z++)
+					for (int z = -5; z < 5; z++)
 					{
 						cube.start();
 						cube.translate(glm::vec3(x * 10, y * 10, z * 10));
