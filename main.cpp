@@ -104,10 +104,6 @@ int main()
 				}
 			}
 		}
-
-
-
-		std::cout << 1/window.getDeltaTime() << " FPS\n";
 	}
 	glfwTerminate();
 	return 0;

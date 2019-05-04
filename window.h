@@ -21,6 +21,7 @@ private:
 
 	double pastTime = 0;
 	double actualTime;
+	double deltaTime;
 
 public:
 
@@ -33,8 +34,9 @@ public:
 	Window(char const * winName, short maj, short min, int w, int l, bool iFL);
 
 	//void input();
-	inline double getTime() { return glfwGetTime(); };
-	double getDeltaTime();
+	inline double getTime() { return glfwGetTime(); }
+	void setDeltaTime();
+	inline double getDeltaTime() { return deltaTime; };
 
 	
 	//getters and setters, they are inline because they are small function

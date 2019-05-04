@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "glm/ext.hpp"
 
 void Camera::updateFront()
 {
@@ -30,18 +31,17 @@ void Camera::update()
 {
 	Input * input = Input::get();
 
-	std::cout << "UP: \t" << input->getkey(UP) << std::endl;
+	/*std::cout << "UP: \t" << input->getkey(UP) << std::endl;
 	std::cout << "DOWN: \t" << input->getkey(DOWN) << std::endl;
 	std::cout << "RIGHT: \t" << input->getkey(RIGHT) << std::endl;
-	std::cout << "LEFT: \t" << input->getkey(LEFT) << std::endl;
-
+	std::cout << "LEFT: \t" << input->getkey(LEFT) << std::endl;*/
+	
 	glm::vec3 newpos(0.f);
 
-	if (input->getkey(UP)) newpos += glm::vec3(input->getkey(UP) * input->getDeltaTime()) * front;
-	if (input->getkey(DOWN)) newpos -= glm::vec3(input->getkey(DOWN) * input->getDeltaTime()) * front;
-	if (input->getkey(RIGHT)) newpos += glm::normalize(glm::cross(front, up)) * glm::vec3(input->getkey(RIGHT) * input->getDeltaTime());
-	if (input->getkey(LEFT)) newpos -= glm::normalize(glm::cross(front, up)) * glm::vec3(input->getkey(LEFT) * input->getDeltaTime());
-
+	newpos += glm::vec3(input->getkey(UP) * input->getDeltaTime()) * front;
+	newpos -= glm::vec3(input->getkey(DOWN) * input->getDeltaTime()) * front;
+	newpos += glm::normalize(glm::cross(front, up)) * glm::vec3(input->getkey(RIGHT) * input->getDeltaTime());
+	newpos -= glm::normalize(glm::cross(front, up)) * glm::vec3(input->getkey(LEFT) * input->getDeltaTime());
 	this->position += newpos;
 
 	updateCamMouse(input->getOffsetX(), input->getOffsetY());

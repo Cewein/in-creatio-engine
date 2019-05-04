@@ -56,7 +56,8 @@ void Input::pollEvent()
 {
 	glfwSwapBuffers(source.display);
 	glfwPollEvents();
-
+	source.setDeltaTime();
+	std::cout << 1 / source.getDeltaTime() << " FPS\n";
 	processKeyboardInput();
 	//processMouseInput();
 }
@@ -78,16 +79,16 @@ float Input::getOffsetY()
 
 float Input::getOffsetX()
 {
-	return Input::xoffset;
+	return xoffset;
 }
 
 int Input::getkey(int i)
 {
-	return (int)Input::key[i];
+	return (int)key[i];
 }
 
 double Input::getDeltaTime()
 {
-	return Input::source.getDeltaTime();
+	return source.getDeltaTime();
 }
 
