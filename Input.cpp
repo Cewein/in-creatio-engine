@@ -1,33 +1,43 @@
 #include "Input.h"
+//init the singleton to nothing
+Input * Input::singleton = nullptr;
 
-
-//constructor
+//private initiator
 Input::Input(Window s)
 {
 	source = s;
 	lastX = s.getWidth() / 2;
 	lastY = s.getHeight() / 2;
-	sensivity = 0.05f;
+	xoffset = 0.f;
+	yoffset = 0.f;
+	key[NUMBERINPUT];
 }
 
 //keyboard input
 // should be done with a file
-void Input::processKeyboardInput(Camera * cam)
+void Input::processKeyboardInput()
 {
-	cam->setDeltaSpeed(cam->getSpeed() * source.getDeltaTime());
 	if (glfwGetKey(source.display, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(source.display, 1);
+
 	if (glfwGetKey(source.display, GLFW_KEY_W) == GLFW_PRESS)
-		cam->addPos(cam->getDeltaSpeed() * cam->getFront());
+		key[UP] = true;
+	else key[UP] = false;
+
 	if (glfwGetKey(source.display, GLFW_KEY_S) == GLFW_PRESS)
-		cam->addPos(-(cam->getDeltaSpeed() * cam->getFront()));
+		key[DOWN] = true;
+	else key[DOWN] = false;
+
 	if (glfwGetKey(source.display, GLFW_KEY_A) == GLFW_PRESS)
-		cam->addPos(-(glm::normalize(glm::cross(cam->getFront(), cam->getUp())) * cam->getDeltaSpeed()));
+		key[LEFT] = true;
+	else key[LEFT] = false;
+
 	if (glfwGetKey(source.display, GLFW_KEY_D) == GLFW_PRESS)
-		cam->addPos(glm::normalize(glm::cross(cam->getFront(), cam->getUp())) * cam->getDeltaSpeed());
+		key[RIGHT] = true;
+	else key[RIGHT] = false;
 }
 
 
-void Input::processMouseInput(Camera * cam)
+void Input::processMouseInput()
 {
 	double xpos;
 	double ypos;
@@ -35,30 +45,68 @@ void Input::processMouseInput(Camera * cam)
 	glfwGetCursorPos(source.display, &xpos, &ypos);
 	if (xpos != lastX || ypos != lastY)
 	{
-		xoffset = xpos - lastX; 
+		
+		mouseY = ypos;
+		mouseX = xpos;
+
+		xoffset = xpos - lastX;
 		yoffset = lastY - ypos;
-
-		xoffset *= sensivity;
-		yoffset *= sensivity;
-
-		cam->updateCamMouse(xoffset, yoffset);
 
 		lastX = xpos;
 		lastY = ypos;
+
+		//std::cout << "offset X:" << xoffset << std::endl;
+		//std::cout << "offset Y:" << yoffset << std::endl;
+		//std::cout << "mouseY:" << mouseY << std::endl;
+		//std::cout << "mouseX:" << mouseX << std::endl;
+		//std::cout << "lastX:" << lastX << std::endl;
+		//std::cout << "lastY:" << lastY << std::endl;
+	}
+	else
+	{
+		xoffset = 0;
+		yoffset = 0;
 	}
 }
 
 //this function is for calling all input process it run on the same thread as windows and pull every frame
-void Input::pollEvent(Camera * cam)
+void Input::pollEvent()
 {
 	glfwSwapBuffers(source.display);
 	glfwPollEvents();
-
-	processKeyboardInput(cam);
-	processMouseInput(cam);
+	source.setDeltaTime();
+	std::cout << 1 / source.getDeltaTime() << " FPS\n";
+	processKeyboardInput();
+	processMouseInput();
 }
 
-
-Input::~Input()
+float Input::getmouseX()
 {
+	return Input::mouseX;
 }
+
+float Input::getmouseY()
+{
+	return Input::mouseY;
+}
+
+float Input::getOffsetY()
+{
+	return Input::yoffset;
+}
+
+float Input::getOffsetX()
+{
+	return xoffset;
+}
+
+int Input::getkey(int i)
+{
+	return (int)key[i];
+}
+
+double Input::getDeltaTime()
+{
+	return source.getDeltaTime();
+}
+

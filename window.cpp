@@ -45,7 +45,7 @@ Window::Window(char const * winName,short maj, short min, int w, int l, bool iFL
 
 //this is delta time is in second
 //it's calculated timeActualFrame - timeLastFrame 
-double Window::getDeltaTime()
+void Window::setDeltaTime()
 {
 	double delta = 0;
 	actualTime = this->getTime();
@@ -54,7 +54,7 @@ double Window::getDeltaTime()
 		delta = actualTime - pastTime;
 	}
 	pastTime = this->getTime();
-	return delta;
+	deltaTime = delta;
 }
 
 

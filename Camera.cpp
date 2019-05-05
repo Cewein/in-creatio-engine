@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "glm/ext.hpp"
 
 void Camera::updateFront()
 {
@@ -19,6 +20,8 @@ Camera::Camera(int width, int height)
 	up = glm::vec3(0.0f, 1.0f, 0.0f);
 	speed = 5.f;
 
+	sensibility = 0.05f;
+
 	yaw = -90.f;
 	pitch = 0.f;
 
@@ -26,16 +29,32 @@ Camera::Camera(int width, int height)
 
 }
 
-void Camera::addPos(glm::vec3 vec)
+void Camera::update()
 {
-	position = position + vec;
+	Input * input = Input::get();
+
+	/*std::cout << "UP: \t" << input->getkey(UP) << std::endl;
+	std::cout << "DOWN: \t" << input->getkey(DOWN) << std::endl;
+	std::cout << "RIGHT: \t" << input->getkey(RIGHT) << std::endl;
+	std::cout << "LEFT: \t" << input->getkey(LEFT) << std::endl;*/
+	
+	glm::vec3 newpos(0.f);
+
+	newpos += glm::vec3(input->getkey(UP) * input->getDeltaTime()) * front;
+	newpos -= glm::vec3(input->getkey(DOWN) * input->getDeltaTime()) * front;
+	newpos += glm::normalize(glm::cross(front, up)) * glm::vec3(input->getkey(RIGHT) * input->getDeltaTime());
+	newpos -= glm::normalize(glm::cross(front, up)) * glm::vec3(input->getkey(LEFT) * input->getDeltaTime());
+	this->position += newpos;
+
+	updateCamMouse(input->getOffsetX(), input->getOffsetY());
+
 }
 
 //offyw and offptch are the offset from last mouse pos
 void Camera::updateCamMouse(float offyw, float offptch)
 {
-	setYaw(yaw + offyw);
-	setPitch(pitch + offptch);
+	setYaw(yaw + offyw * sensibility);
+	setPitch(pitch + offptch * sensibility);
 	updateFront();
 }
 

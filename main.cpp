@@ -1,7 +1,7 @@
 #include <iostream>
 #include <time.h>
-#include "window.h"
 #include "Input.h"
+#include "window.h"
 #include "Shader.h"
 #include "Object.h"
 #include "Camera.h"
@@ -12,7 +12,7 @@ int main()
 {
 
 	Window window("test", 4, 5, 800, 800, false);
-	Input input(window);
+	Input * input = Input::init(window);
 	Shader tex("shader/vertex.glsl", "shader/texture.glsl");
 
 	float vertices[] = {
@@ -70,7 +70,8 @@ int main()
 	glViewport(0, 0, window.getWidth(), window.getHeight());
 	while (!glfwWindowShouldClose(window.display))
 	{
-		input.pollEvent(&cam);
+		input->pollEvent();
+		cam.update();
 
 		{
 			glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
@@ -89,11 +90,11 @@ int main()
 		}
 
 		{
-			for (int x = -10; x < 10; x++)
+			for (int x = -5; x < 5; x++)
 			{
-				for (int y = -10; y < 10; y++)
+				for (int y = -5; y < 5; y++)
 				{
-					for (int z = -10; z < 10; z++)
+					for (int z = -5; z < 5; z++)
 					{
 						cube.start();
 						cube.translate(glm::vec3(x * 10, y * 10, z * 10));
@@ -103,10 +104,6 @@ int main()
 				}
 			}
 		}
-
-
-
-		std::cout << 1/window.getDeltaTime() << " FPS\n";
 	}
 	glfwTerminate();
 	return 0;
