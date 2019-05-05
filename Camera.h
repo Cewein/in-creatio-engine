@@ -20,7 +20,7 @@ private:
 
 	float yaw;
 	float pitch;
-	float sensiblity;
+	float sensibility;
 
 	float speed;
 	float deltaSpeed;

@@ -43,12 +43,30 @@ void Input::processMouseInput()
 	double ypos;
 
 	glfwGetCursorPos(source.display, &xpos, &ypos);
-	
-	mouseY = ypos;
-	mouseX = xpos;
+	if (xpos != lastX || ypos != lastY)
+	{
+		
+		mouseY = ypos;
+		mouseX = xpos;
 
-	xoffset = mouseX - lastX;
-	xoffset = lastY - mouseY;
+		xoffset = xpos - lastX;
+		yoffset = lastY - ypos;
+
+		lastX = xpos;
+		lastY = ypos;
+
+		//std::cout << "offset X:" << xoffset << std::endl;
+		//std::cout << "offset Y:" << yoffset << std::endl;
+		//std::cout << "mouseY:" << mouseY << std::endl;
+		//std::cout << "mouseX:" << mouseX << std::endl;
+		//std::cout << "lastX:" << lastX << std::endl;
+		//std::cout << "lastY:" << lastY << std::endl;
+	}
+	else
+	{
+		xoffset = 0;
+		yoffset = 0;
+	}
 }
 
 //this function is for calling all input process it run on the same thread as windows and pull every frame
@@ -59,7 +77,7 @@ void Input::pollEvent()
 	source.setDeltaTime();
 	std::cout << 1 / source.getDeltaTime() << " FPS\n";
 	processKeyboardInput();
-	//processMouseInput();
+	processMouseInput();
 }
 
 float Input::getmouseX()

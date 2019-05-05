@@ -20,6 +20,8 @@ Camera::Camera(int width, int height)
 	up = glm::vec3(0.0f, 1.0f, 0.0f);
 	speed = 5.f;
 
+	sensibility = 0.05f;
+
 	yaw = -90.f;
 	pitch = 0.f;
 
@@ -51,8 +53,8 @@ void Camera::update()
 //offyw and offptch are the offset from last mouse pos
 void Camera::updateCamMouse(float offyw, float offptch)
 {
-	setYaw(yaw + offyw);
-	setPitch(pitch + offptch);
+	setYaw(yaw + offyw * sensibility);
+	setPitch(pitch + offptch * sensibility);
 	updateFront();
 }
 
