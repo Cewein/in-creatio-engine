@@ -11,9 +11,9 @@
 int main()
 {
 
-	Window window("test", 4, 5, 800, 800, false);
-	Input * input = Input::init(window);
-	Shader tex("shader/vertex.glsl", "shader/texture.glsl");
+	Creatio::Window window("test", 4, 5, 500, 500, false);
+	Creatio::Input * input = Creatio::Input::init(window);
+	Creatio::Shader tex("shader/vertex.glsl", "shader/texture.glsl");
 
 	float vertices[] = {
 		// positions          // normals           // texture coords
@@ -60,9 +60,22 @@ int main()
 		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
 	};
 
-	Texture cobble("texture/cobble.png", false);
-	Object cube(vertices, 36, cobble);
-	Camera cam(window.getWidth(), window.getHeight());
+	float plane[] = {
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
+		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f
+	};
+
+	glActiveTexture(GL_TEXTURE0);
+	Creatio::Texture cobble("texture/cobble.png", false);
+	glActiveTexture(GL_TEXTURE1);
+	Creatio::Texture sand("texture/sand.jpg", false);
+	Creatio::Object cube(vertices, 36, cobble);
+	Creatio::Object cube2(plane, 6, sand);
+	Creatio::Camera cam(window.getWidth(), window.getHeight());
 	tex.use();
 	tex.setMat4((char *)"projection", cam.getProj());
 
@@ -85,25 +98,21 @@ int main()
 			tex.setVec3((char *)"iResolution", (float)window.getWidth(), (float)window.getHeight(), 0.f);
 			tex.setFloat((char *)"iTime", window.getTime());
 			tex.setInt((char *)"tex",0);
+			tex.setInt((char *)"normalTex", 1);
 			cam.setView(glm::lookAt(cam.getPos(),cam.getPos() + cam.getFront(), cam.getUp()));
 			tex.setMat4((char *)"view", cam.getView());
 		}
 
 		{
-			for (int x = -5; x < 5; x++)
-			{
-				for (int y = -5; y < 5; y++)
-				{
-					for (int z = -5; z < 5; z++)
-					{
-						cube.start();
-						cube.translate(glm::vec3(x * 10, y * 10, z * 10));
-						tex.setMat4((char *)"transform", cube.getTrans());
-						cube.show();
-					}
-				}
-			}
+			tex.setInt((char *)"tex", 1);
+			tex.setInt((char *)"normalTex", 0);
 		}
+
+		cube2.start();
+		cube2.translate(glm::vec3(0.f, 0.f, 0.f));
+		tex.setMat4((char *)"transform", cube2.getTrans());
+		cube2.show();
+
 	}
 	glfwTerminate();
 	return 0;
