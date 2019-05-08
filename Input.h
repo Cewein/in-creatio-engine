@@ -10,70 +10,73 @@
 #define RIGHT 2
 #define LEFT 3
 
-class Input
+namespace Creatio
 {
-
-private:
-
-	static Input *singleton; //pointer to singleton
-	Input(Window s); //private constructor
-	Input(); //second private constructor
-
-	Window source;
-
-	bool key[4];
-
-	float mouseX;
-	float mouseY;
-
-	float lastX;
-	int lastY;
-
-	float xoffset;
-	float yoffset;
-
-
-public:
-	//Input(Window s);
-
-	void processKeyboardInput();
-	void processMouseInput();
-	void pollEvent();
-
-	//remove duplication
-	Input(const Input&) = delete;
-	Input& operator = (const Input&) = delete;
-
-	//get the singleton, if you have not init please do or it will not work
-	static Input *get()
+	class Input
 	{
-		if (!singleton)
+
+	private:
+
+		static Input *singleton; //pointer to singleton
+		Input(Creatio::Window s); //private constructor
+		Input(); //second private constructor
+
+		Creatio::Window source;
+
+		bool key[4];
+
+		float mouseX;
+		float mouseY;
+
+		float lastX;
+		int lastY;
+
+		float xoffset;
+		float yoffset;
+
+
+	public:
+		//Input(Window s);
+
+		void processKeyboardInput();
+		void processMouseInput();
+		void pollEvent();
+
+		//remove duplication
+		Input(const Input&) = delete;
+		Input& operator = (const Input&) = delete;
+
+		//get the singleton, if you have not init please do or it will not work
+		static Input *get()
 		{
-			exit(2);
+			if (!singleton)
+			{
+				exit(2);
+			}
+			return singleton;
 		}
-		return singleton;
-	}
 
-	//this must be the first one for link the windows and the input
-	static Input *init(Window s)
-	{
-		if (!singleton)
+		//this must be the first one for link the windows and the input
+		static Input *init(Creatio::Window s)
 		{
-			singleton = new Input(s);
+			if (!singleton)
+			{
+				singleton = new Input(s);
 			
+			}
+			return singleton;
 		}
-		return singleton;
-	}
 
 
-	//getter and setter
-	float getmouseX(); 
-	float getmouseY(); 
-	float getOffsetY(); 
-	float getOffsetX(); 
+		//getter and setter
+		float getmouseX(); 
+		float getmouseY(); 
+		float getOffsetY(); 
+		float getOffsetX(); 
 	
-	int getkey(int i); 
-	double getDeltaTime();
+		int getkey(int i); 
+		double getDeltaTime();
 
-};
+	};
+}
 
