@@ -21,6 +21,7 @@ namespace Creatio
 		front = glm::vec3(0.0f, 0.0f, -1.0f);
 		up = glm::vec3(0.0f, 1.0f, 0.0f);
 		speed = 5.f;
+		defaultSpeed = speed;
 
 		sensibility = 0.05f;
 
@@ -34,19 +35,17 @@ namespace Creatio
 	void Camera::update()
 	{
 		Input * input = Input::get();
-
-		/*std::cout << "UP: \t" << input->getkey(UP) << std::endl;
-		std::cout << "DOWN: \t" << input->getkey(DOWN) << std::endl;
-		std::cout << "RIGHT: \t" << input->getkey(RIGHT) << std::endl;
-		std::cout << "LEFT: \t" << input->getkey(LEFT) << std::endl;*/
 	
 		glm::vec3 newpos(0.f);
+
+		speed = defaultSpeed;
+		speed += input->getkey(SHIFT) * 10 * defaultSpeed;
 
 		newpos += glm::vec3(input->getkey(UP) * input->getDeltaTime()) * front;
 		newpos -= glm::vec3(input->getkey(DOWN) * input->getDeltaTime()) * front;
 		newpos += glm::normalize(glm::cross(front, up)) * glm::vec3(input->getkey(RIGHT) * input->getDeltaTime());
 		newpos -= glm::normalize(glm::cross(front, up)) * glm::vec3(input->getkey(LEFT) * input->getDeltaTime());
-		this->position += newpos;
+		this->position += newpos * speed;
 
 		updateCamMouse(input->getOffsetX(), input->getOffsetY());
 

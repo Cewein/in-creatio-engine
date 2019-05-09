@@ -3,12 +3,13 @@
 #include "Camera.h"
 #include <vector>
 
-#define NUMBERINPUT 4
+#define NUMBERINPUT 5
 
 #define UP 0
 #define DOWN 1
 #define RIGHT 2
 #define LEFT 3
+#define SHIFT 4
 
 namespace Creatio
 {
@@ -23,7 +24,7 @@ namespace Creatio
 
 		Creatio::Window source;
 
-		bool key[4];
+		bool key[NUMBERINPUT];
 
 		float mouseX;
 		float mouseY;

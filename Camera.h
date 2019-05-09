@@ -25,7 +25,7 @@ namespace Creatio
 		float sensibility;
 
 		float speed;
-		float deltaSpeed;
+		float defaultSpeed;
 
 		void updateFront();
 		void updateCamMouse(float offyw, float offptch);
@@ -40,7 +40,7 @@ namespace Creatio
 		inline glm::vec3 getFront() { return front; }
 		inline glm::vec3 getPos() { return position; }
 		inline float getSpeed() { return speed; }
-		inline float getDeltaSpeed() { return deltaSpeed; }
+		inline float getDefaultSpeed() { return defaultSpeed; }
 		inline float getYaw() { return yaw; }
 
 		//miam miam c'est bon les pitchs
@@ -49,7 +49,7 @@ namespace Creatio
 		//setter
 		inline void setView(glm::mat4 newView) { view = newView; }
 		inline void setSpeed(float spd) { speed = spd; }
-		inline void setDeltaSpeed(float dspd) { deltaSpeed = dspd; }
+		inline void setDefaultSpeed(float dspd) { defaultSpeed = dspd; }
 		inline void setYaw(float yw) { yaw = yw; }
 		void setPitch(float ptch);
 		inline void setFront(glm::vec3 frnt) { front = frnt; }

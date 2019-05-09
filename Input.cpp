@@ -37,6 +37,10 @@ namespace Creatio
 		if (glfwGetKey(source.display, GLFW_KEY_D) == GLFW_PRESS)
 			key[RIGHT] = true;
 		else key[RIGHT] = false;
+
+		if (glfwGetKey(source.display, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+			key[SHIFT] = true;
+		else key[SHIFT] = false;
 	}
 
 
