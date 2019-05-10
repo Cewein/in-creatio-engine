@@ -11,21 +11,22 @@
 int main()
 {
 
-	Creatio::Window window("test", 4, 5, 800, 800, false);
+	Creatio::Window window("test", 4, 5, 1920, 1080, true);
 	Creatio::Input * input = Creatio::Input::init(window);
 	Creatio::Shader tex("shader/vertex.glsl", "shader/raymarching.glsl");
 
 	float plane[] = {
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f
+		-1.f, -1.f, 0.0f,  0.0f,  0.0f, -.0f,  0.0f,  0.0f,
+		 1.f, -1.f, 0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
+		 1.f,  1.f, 0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+		 1.f,  1.f, 0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+		-1.f,  1.f, 0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
+		-1.f, -1.f, 0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f
 	};
 
 	Creatio::Object cube2(plane, 6);
 	Creatio::Camera cam(window.getWidth(), window.getHeight());
+
 	tex.use();
 	tex.setMat4((char *)"projection", cam.getProj());
 	cam.setView(glm::lookAt(cam.getPos(), cam.getPos() + cam.getFront(), cam.getUp()));

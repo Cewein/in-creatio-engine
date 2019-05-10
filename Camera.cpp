@@ -38,6 +38,9 @@ namespace Creatio
 	
 		glm::vec3 newpos(0.f);
 
+		defaultSpeed -= input->getkey(SLOWER) * 0.01f;
+		if (defaultSpeed < 0.f) defaultSpeed = 0.f;
+		defaultSpeed += input->getkey(FASTER) * 0.01f;
 		speed = defaultSpeed;
 		speed += input->getkey(SHIFT) * 10 * defaultSpeed;
 
