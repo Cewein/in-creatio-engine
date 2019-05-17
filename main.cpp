@@ -11,17 +11,17 @@
 int main()
 {
 
-	Creatio::Window window("test", 4, 5, 1920, 1080, true);
+	Creatio::Window window("test", 4, 5, 1000, 1000, false);
 	Creatio::Input * input = Creatio::Input::init(window);
 	Creatio::Shader tex("shader/vertex.glsl", "shader/raymarching.glsl");
 
 	float plane[] = {
-		-1.f, -1.f, 0.0f,  0.0f,  0.0f, -.0f,  0.0f,  0.0f,
-		 1.f, -1.f, 0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-		 1.f,  1.f, 0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-		 1.f,  1.f, 0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-		-1.f,  1.f, 0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-		-1.f, -1.f, 0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
+		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f
 	};
 
 	Creatio::Object cube2(plane, 6);

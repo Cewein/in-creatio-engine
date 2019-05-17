@@ -80,25 +80,55 @@ float differenceSDF(float distA, float distB) {
 // and creation more complex object
 // use DE operator for creatin complex object
 
-float sphereSDF(vec3 samplePoint, float p, float s) {
+float sphereSDF(vec3 samplePoint, vec3 p, float s) {
     return length(samplePoint - p) - s;
 }
 
-float cylinderSDF( vec3 p, vec3 c )
+float cylinderSDF( vec3 samplePoint, vec3 p, mat4 rot ,vec3 c )
 {
-  return length(p.xz-c.xy)-c.z;
+    vec3 smp = vec4(rot*vec4(samplePoint - p,1.)).xyz;
+    return length(smp.xz-c.xy)-c.z;
 }
 
-float torusSDF( vec3 p, vec2 t )
+float torusSDF( vec3 samplePoint, vec3 p, mat4 rot, vec2 t )
 {
-  vec2 q = vec2(length(p.xz)-t.x,p.y);
-  return length(q)-t.y;
+    vec3 smp = vec4(rot*vec4(samplePoint - p,1.)).xyz;
+    vec2 q = vec2(length(smp.xz)-t.x,smp.y);
+    return length(q)-t.y;
 }
 
-float CappedCylinderSDF( vec3 p, vec2 h )
+float CappedCylinderSDF( vec3 samplePoint, vec3 p, mat4 rot, vec2 h )
 {
-  vec2 d = abs(vec2(length(p.xz),p.y)) - h;
-  return min(max(d.x,d.y),0.0) + length(max(d,0.0));
+    vec3 smp = vec4(rot*vec4(samplePoint - p,1.)).xyz;
+    vec2 d = abs(vec2(length(smp.xz),smp.y)) - h;
+    return min(max(d.x,d.y),0.0) + length(max(d,0.0));
+}
+
+// ---- body function ----
+// here for creating a monster
+// base picture : http://diaryofinhumanspecies.com/WordPress/wp-content/gallery/last/raignee.jpg
+
+float leg(vec3 samplePoint, vec3 p)
+{
+    vec3 smp = samplePoint - p;
+
+    mat4 rot = rotationMatrix(vec3(0.,0.,1.), RADIANT * 90.);
+    
+    float result = CappedCylinderSDF(samplePoint, vec3(0., -1., 0.), rot, vec2(0.2,10.9));
+
+    return result;
+}
+
+float body(vec3 samplePoint, vec3 p)
+{
+    vec3 smp = samplePoint - p;
+
+    float result = sphereSDF(smp, vec3(0.), 1.);
+    result = unionSDF(result, sphereSDF(smp, vec3(1.2,-0.25,0.), 0.80), .7);
+    result = unionSDF(result, sphereSDF(smp, vec3(0.,0.50,0.), 0.3),0.7);
+    result = unionSDF(result, sphereSDF(smp, vec3(-.5,0.50,0.), 0.10),0.7);
+
+    return result;
 }
 
 // ---- raymarching scene ----
@@ -109,16 +139,12 @@ float sceneSDF(vec3 samplePoint) {
     
    	float modu = 6.;
     
-    samplePoint = mod(samplePoint, modu);
+    samplePoint = mod(samplePoint + modu/2, modu) - modu/2;
+
+    float result = body(samplePoint, vec3(0.));
     
-    float result = sphereSDF(samplePoint, modu/2, .75);
-    result = unionSDF(result, CappedCylinderSDF( samplePoint - modu/2., vec2(0.25,50.)),0.25);
-    
-    vec4 rot = rotationMatrix(vec3(1.,0.,0.), 90. * RADIANT) * vec4(samplePoint- modu/2.,1.);
-   	result = unionSDF(result, CappedCylinderSDF( rot.xyz, vec2(0.25,50.)),0.25);
-    
-    rot = rotationMatrix(vec3(.0,0.,1.), 90. * RADIANT) * vec4(samplePoint- modu/2.,1.);
-   	result = unionSDF(result, CappedCylinderSDF( rot.xyz, vec2(0.25,50.)),0.6);
+
+    result = unionSDF(result, leg(samplePoint, vec3(0.)), 0.2);
     
     return result;
 }
@@ -194,7 +220,7 @@ vec3 phongIllumination(vec3 k_a, vec3 k_d, vec3 k_s, float alpha, vec3 p, vec3 e
     const vec3 ambientLight = 0.6 * vec3(1.0, 1.0, 1.0);
     vec3 color = ambientLight * k_a;
     
-    vec3 light1Pos = vec3(0.,0.,0.);
+    vec3 light1Pos = vec3(5.,5.,0.);
     
     vec3 light1Intensity = vec3(0.5, 0.5, 0.5);
     
