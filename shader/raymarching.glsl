@@ -108,13 +108,28 @@ float CappedCylinderSDF( vec3 samplePoint, vec3 p, mat4 rot, vec2 h )
 // here for creating a monster
 // base picture : http://diaryofinhumanspecies.com/WordPress/wp-content/gallery/last/raignee.jpg
 
-float leg(vec3 samplePoint, vec3 p)
+float leg(vec3 samplePoint, vec3 p, bool reverse)
 {
     vec3 smp = samplePoint - p;
 
-    mat4 rot = rotationMatrix(vec3(0.,0.,1.), RADIANT * 90.);
+	float side = 1.0;
+	if(reverse) side = -1.0;
+
+    mat4 base = rotationMatrix(vec3(1.,0.,0.), RADIANT * 90.);
     
-    float result = CappedCylinderSDF(samplePoint, vec3(0., -1., 0.), rot, vec2(0.2,10.9));
+    float result = CappedCylinderSDF(smp, vec3(0., -.9, 0.), base, vec2(0.150,0.7));
+	 
+	 mat4 b1 = rotationMatrix(vec3(1.,0.,0.), RADIANT * -60.*side);
+
+	 result = unionSDF(result, CappedCylinderSDF(smp, vec3(0., -.65, -1*side), b1, vec2(0.150,0.7)), 0.5);
+
+	b1 = rotationMatrix(vec3(1.,0.,0.), RADIANT * 60.*side);
+
+	result = unionSDF(result, CappedCylinderSDF(smp, vec3(0., -.65, -2.*side), b1, vec2(0.150,0.7)), 0.2);
+
+	b1 = rotationMatrix(vec3(1.,0.,0.), RADIANT * -10*side);
+
+	result = unionSDF(result, CappedCylinderSDF(smp, vec3(0., -1.45, -2.45*side),  b1, vec2(0.12,0.5)), 0.3);
 
     return result;
 }
@@ -123,12 +138,25 @@ float body(vec3 samplePoint, vec3 p)
 {
     vec3 smp = samplePoint - p;
 
-    float result = sphereSDF(smp, vec3(0.), 1.);
-    result = unionSDF(result, sphereSDF(smp, vec3(1.2,-0.25,0.), 0.80), .7);
-    result = unionSDF(result, sphereSDF(smp, vec3(0.,0.50,0.), 0.3),0.7);
-    result = unionSDF(result, sphereSDF(smp, vec3(-.5,0.50,0.), 0.10),0.7);
+    float result = sphereSDF(smp, vec3(0.,0.3,0.), 1.3);
+    result = unionSDF(result, sphereSDF(smp, vec3(1.7,0.,0.), 1.10), 1.);
+    result = unionSDF(result, sphereSDF(smp, vec3(0.,1.00,0.), 0.6),0.7);
+    result = unionSDF(result, sphereSDF(smp, vec3(-.5,1.00,0.), 0.40),0.7);
 
     return result;
+}
+
+float eyes(vec3  samplePoint, vec3 p)
+{
+	vec3 smp = samplePoint - p;
+
+	float result = sphereSDF(smp, vec3(-0.9,0.4,0.), 0.65);
+
+	mat4 b1 = rotationMatrix(vec3(0.,0.,1.), RADIANT * 90);
+
+	result = unionSDF(result, torusSDF(smp, vec3(-1.15,0.4,0.), b1, vec2(0.575,0.07)), 0.);
+
+	return result;
 }
 
 // ---- raymarching scene ----
@@ -138,13 +166,31 @@ float body(vec3 samplePoint, vec3 p)
 float sceneSDF(vec3 samplePoint) {
     
    	float modu = 6.;
-    
-    samplePoint = mod(samplePoint + modu/2, modu) - modu/2;
 
+	samplePoint.x += iTime * 5.f;
+    
+    samplePoint = mod(samplePoint + modu/2, vec3(6.,10000.,6.)) - modu/2;
+
+	//body
     float result = body(samplePoint, vec3(0.));
     
+	//leg
+	vec3 smp = vec4(rotationMatrix(vec3(1.,0.,0.), RADIANT * 5 * sin(iTime * 5.)) * vec4(samplePoint,1.0)).xyz;
+    result = unionSDF(result, leg(smp, vec3(0.),false), 0.05);
+    result = unionSDF(result, leg(smp, vec3(0.),true), 0.05);
 
-    result = unionSDF(result, leg(samplePoint, vec3(0.)), 0.2);
+	smp = vec4(rotationMatrix(vec3(1.,0.,0.), RADIANT * -5 * sin(iTime * 5.)) * vec4(samplePoint,1.0)).xyz;
+	result = unionSDF(result, leg(smp, vec3(1,0.,0.),false), 0.05);
+	result = unionSDF(result, leg(smp, vec3(1,0.,0.),true), 0.05);
+
+	smp = vec4(rotationMatrix(vec3(1.,0.,0.), RADIANT * 5 * sin(iTime * 5.)) * vec4(samplePoint,1.0)).xyz;
+	result = unionSDF(result, leg(smp, vec3(2,0.,0.),false), 0.05);
+	result = unionSDF(result, leg(smp, vec3(2,0.,0.),true), 0.05);
+	
+	//eyes ? jk there is only one eye
+	result = unionSDF(result,eyes(samplePoint,vec3(0.)),0.05);
+
+
     
     return result;
 }
