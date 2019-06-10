@@ -13,7 +13,7 @@ namespace Creatio
 
 	Camera::Camera(int width, int height)
 	{
-		projection = glm::perspective(glm::radians(90.0f), (float)width / (float)height, 0.01f, 1000000.0f);
+		projection = glm::perspective(glm::radians(70.0f), (float)width / (float)height, 0.01f, 1000000.0f);
 
 		view = glm::mat4(1.f);
 

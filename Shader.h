@@ -1,6 +1,7 @@
 #pragma once
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <string>
 
 #define NO_SHADER_USED 1
 
@@ -38,7 +39,7 @@ namespace Creatio
 		inline void setVec4(char * name, vec4 value) { glUniform4fv(glGetUniformLocation(shaderProgramPtr, name), 1, &value[0]); }
 		inline void setVec4(char * name, float x, float y, float z, float w) { glUniform4f(glGetUniformLocation(shaderProgramPtr, name), x, y, z, w); }
 		inline void setMat3(char * name, mat3 value) { glUniformMatrix3fv(glGetUniformLocation(shaderProgramPtr, name), 1, GL_FALSE, &value[0][0]); }
-		inline void setMat4(char * name, mat4 value) { glUniformMatrix4fv(glGetUniformLocation(shaderProgramPtr, name), 1, GL_FALSE, &value[0][0]); }
+		inline void setMat4(std::string name, mat4 value) { glUniformMatrix4fv(glGetUniformLocation(shaderProgramPtr, name.c_str()), 1, GL_FALSE, &value[0][0]); }
 
 		//usage function
 		inline void use() { glUseProgram(shaderProgramPtr); }

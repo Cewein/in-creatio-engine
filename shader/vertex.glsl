@@ -7,6 +7,7 @@ uniform mat4 transform;
 uniform mat4 view;
 uniform mat4 projection;
 
+out vec3 pos;
 out vec3 normal;
 out vec2 uv;
 
@@ -15,4 +16,5 @@ void main()
     gl_Position = projection * view * transform * vec4(aPos, 1.0);
 	uv = aTexcoord;
 	normal = aNormal;
+	pos = vec3(transform * vec4(aPos, 1.0));
 }
