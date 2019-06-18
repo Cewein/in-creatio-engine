@@ -14,10 +14,12 @@ out vec4 fragColor;
 
 //parameter of the shader
 const int MAX_MARCHING_STEPS = 256;
-const float MIN_DIST = 0.00001;
+const float MIN_DIST = 0.0001;
 const float MAX_DIST = 200.0;
 const float EPSILON = 0.001;
 const float RADIANT = 0.0174533;
+
+#define LIGHT 1
 
 
 // ----- Matrix operator ----
@@ -104,6 +106,11 @@ float CappedCylinderSDF( vec3 samplePoint, vec3 p, mat4 rot, vec2 h )
     return min(max(d.x,d.y),0.0) + length(max(d,0.0));
 }
 
+float planeSDF( vec3 p )
+{
+	return p.y;
+}
+
 // ---- body function ----
 // here for creating a monster
 // base picture : http://diaryofinhumanspecies.com/WordPress/wp-content/gallery/last/raignee.jpg
@@ -167,9 +174,9 @@ float sceneSDF(vec3 samplePoint) {
     
    	float modu = 6.;
 
-	samplePoint.x += iTime * 5.f;
+	//samplePoint.x += iTime * 5.f;
     
-    samplePoint = mod(samplePoint + modu/2, vec3(6.,10000.,6.)) - modu/2;
+    samplePoint = mod(samplePoint + modu/2., vec3(1000.,10000.,6.)) - modu/2.;
 
 	//body
     float result = body(samplePoint, vec3(0.));
@@ -190,6 +197,9 @@ float sceneSDF(vec3 samplePoint) {
 	//eyes ? jk there is only one eye
 	result = unionSDF(result,eyes(samplePoint,vec3(0.)),0.05);
 
+
+	//floor
+	result = unionSDF(result,planeSDF(samplePoint + 2.0),0.);
 
     
     return result;
@@ -227,6 +237,7 @@ vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
     return normalize(vec3(xy, -z));
 }
 
+#if LIGHT == 1
 // ---- Ligth Algorythm ----
 // estimateNormal : https://iquilezles.org/www/articles/normalsSDF/normalsSDF.htm
 // phong : https://en.wikipedia.org/wiki/Phong_shading
@@ -242,7 +253,7 @@ vec3 estimateNormal(vec3 p) {
 vec3 phongContribForLight(vec3 k_d, vec3 k_s, float alpha, vec3 p, vec3 eye,
                           vec3 lightPos, vec3 lightIntensity) {
     vec3 N = estimateNormal(p);
-    vec3 L = normalize(lightPos - p);
+    vec3 L = normalize(lightPos);
     vec3 V = normalize(eye - p);
     vec3 R = normalize(reflect(-L, N));
     
@@ -260,6 +271,8 @@ vec3 phongContribForLight(vec3 k_d, vec3 k_s, float alpha, vec3 p, vec3 eye,
         return lightIntensity * (k_d * dotLN);
     }
     return lightIntensity * (k_d * dotLN + k_s * pow(dotRV, alpha));
+
+
 }
 
 vec3 phongIllumination(vec3 k_a, vec3 k_d, vec3 k_s, float alpha, vec3 p, vec3 eye) {
@@ -276,6 +289,124 @@ vec3 phongIllumination(vec3 k_a, vec3 k_d, vec3 k_s, float alpha, vec3 p, vec3 e
   
     return color;
 }
+#endif
+#if LIGHT == 2
+// ---- Shadow algorythm ----
+// https://www.iquilezles.org/www/articles/rmshadows/rmshadows.htm
+
+float calcSoftshadow( in vec3 ro, in vec3 rd, in float mint, in float tmax, int technique )
+{
+	float res = 1.0;
+    float t = mint;
+    float ph = 1e10; // big, such that y = 0 on the first iteration
+    
+    for( int i=0; i<32; i++ )
+    {
+		float h = sceneSDF( ro + rd*t );
+
+        // traditional technique
+        if( technique==0 )
+        {
+        	res = min( res, 10.0*h/t );
+        }
+        // improved technique
+        else
+        {
+            // use this if you are getting artifact on the first iteration, or unroll the
+            // first iteration out of the loop
+            //float y = (i==0) ? 0.0 : h*h/(2.0*ph); 
+
+            float y = h*h/(2.0*ph);
+            float d = sqrt(h*h-y*y);
+            res = min( res, 10.0*d/max(0.0,t-y) );
+            ph = h;
+        }
+        
+        t += h;
+        
+        if( res<0.0001 || t>tmax ) break;
+        
+    }
+    return clamp( res, 0.0, 1.0 );
+}
+
+vec3 calcNormal( in vec3 pos )
+{
+    vec2 e = vec2(1.0,-1.0)*0.5773*0.0005;
+    return normalize( e.xyy*sceneSDF( pos + e.xyy ) + 
+					  e.yyx*sceneSDF( pos + e.yyx ) + 
+					  e.yxy*sceneSDF( pos + e.yxy ) + 
+					  e.xxx*sceneSDF( pos + e.xxx ) );
+}
+
+float castRay( in vec3 ro, in vec3 rd )
+{
+    float tmin = MIN_DIST;
+    float tmax = MAX_DIST;
+    
+    float t = tmin;
+    for( int i=0; i<64; i++ )
+    {
+	    float precis = 0.0005*t;
+	    float res = sceneSDF( ro+rd*t );
+        if( res<precis || t>tmax ) break;
+        t += res;
+    }
+
+    if( t>tmax ) t=-1.0;
+    return t;
+}
+
+float calcAO( in vec3 pos, in vec3 nor )
+{
+	float occ = 0.0;
+    float sca = 1.0;
+    for( int i=0; i<5; i++ )
+    {
+        float h = 0.001 + 0.15*float(i)/4.0;
+        float d = sceneSDF( pos + h*nor );
+        occ += (h-d)*sca;
+        sca *= 0.95;
+    }
+    return clamp( 1.0 - 1.5*occ, 0.0, 1.0 );    
+}
+
+vec3 render( in vec3 ro, in vec3 rd, in int technique)
+{ 
+    vec3  col = vec3(0.0);
+    float t = castRay(ro,rd);
+
+    if( t>-0.5 )
+    {
+        vec3 pos = ro + t*rd;
+        vec3 nor = calcNormal( pos );
+        
+        // material        
+		vec3 mate = vec3(0.3);
+
+        // key light
+        vec3  lig = normalize( vec3(5., 5., 0.) );
+        vec3  hal = normalize( lig-rd );
+        float dif = clamp( dot( nor, lig ), 0.0, 1.0 ) * 
+                    calcSoftshadow( pos, lig, MIN_DIST, MAX_DIST, technique );
+
+		float spe = pow( clamp( dot( nor, hal ), 0.0, 1.0 ),16.0)*
+                    dif *
+                    (0.04 + 0.96*pow( clamp(1.0+dot(hal,rd),0.0,1.0), 5.0 ));
+
+		col = mate * 4.0*dif*vec3(1.00,0.70,0.5);
+        col +=      12.0*spe*vec3(1.00,0.70,0.5);
+        
+        // ambient light
+        float occ = calcAO( pos, nor );
+		float amb = clamp( 0.5+0.5*nor.y, 0.0, 1.0 );
+        col += mate*amb*occ*vec3(0.0,0.08,0.1);
+        
+    }
+
+	return col;
+}
+#endif
 
 void main()
 {
@@ -296,8 +427,15 @@ void main()
     vec3 K_d = vec3(1., 1., 1.);
     vec3 K_s = vec3(.5, .5, .5);
     float shininess = 10.0;
-    
-    vec3 color = phongIllumination(K_a, K_d, K_s, shininess, p, eye);
+
+    #if LIGHT == 1
+    vec3 color =  phongIllumination(K_a, K_d, K_s, shininess, p, eye);
+	#else
+	vec3 color = render(eye, worldDir, 0);
+	color = pow( color, vec3(0.4545) );
+	#endif
+
+	
     
     //sky looking background
     if (dist > MAX_DIST - EPSILON) {
@@ -307,14 +445,9 @@ void main()
     }
 
     int glowing = 10;
-    if(dist < MIN_DIST)
-    {
-       
-    }
+    if(dist < MIN_DIST);
     else
-    {
         color += (1.0 - m) * (1.0 - m) * vec3(0.0745, 0.0941, 0.098);
-    }
     
     fragColor = vec4(color, 1.0);
 
