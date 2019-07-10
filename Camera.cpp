@@ -13,7 +13,20 @@ namespace Creatio
 
 	Camera::Camera(int width, int height)
 	{
-		projection = glm::perspective(glm::radians(70.0f), (float)width / (float)height, 0.01f, 1000000.0f);
+		this->width = width;
+		this->height = height;
+		this->fov = 70.f;
+
+		init();
+
+	}
+
+	Camera::Camera(int width, int height, float fov)
+	{
+		this->width = width;
+		this->height = height;
+
+		projection = glm::perspective(glm::radians(fov), (float)width / (float)height, 0.01f, 1000000.0f);
 
 		view = glm::mat4(1.f);
 
@@ -28,17 +41,11 @@ namespace Creatio
 		pitch = 0.f;
 
 		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-
 	}
 
 	void Camera::update()
 	{
 		Input * input = Input::get();
-
-		/*std::cout << "UP: \t" << input->getkey(UP) << std::endl;
-		std::cout << "DOWN: \t" << input->getkey(DOWN) << std::endl;
-		std::cout << "RIGHT: \t" << input->getkey(RIGHT) << std::endl;
-		std::cout << "LEFT: \t" << input->getkey(LEFT) << std::endl;*/
 	
 		glm::vec3 newpos(0.f);
 
@@ -58,6 +65,30 @@ namespace Creatio
 		setYaw(yaw + offyw * sensibility);
 		setPitch(pitch + offptch * sensibility);
 		updateFront();
+	}
+
+	void Camera::init()
+	{
+		projection = glm::perspective(glm::radians(fov), (float)width / (float)height, 0.01f, 1000000.0f);
+
+		view = glm::mat4(1.f);
+
+		position = glm::vec3(0.0f, 0.0f, 0.0f);
+		front = glm::vec3(0.0f, 0.0f, -1.0f);
+		up = glm::vec3(0.0f, 1.0f, 0.0f);
+		speed = 5.f;
+
+		sensibility = 0.05f;
+
+		yaw = -90.f;
+		pitch = 0.f;
+
+		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+	}
+
+	void Camera::setFov(float fov)
+	{
+		projection = glm::perspective(glm::radians(fov), (float)width / (float)height, 0.01f, 1000000.0f);
 	}
 
 	void Camera::setPitch(float ptch)

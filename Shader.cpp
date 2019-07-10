@@ -5,6 +5,13 @@
 
 namespace Creatio
 {
+	void Shader::use()
+	{
+		GLint actual;
+		glGetIntegerv(GL_CURRENT_PROGRAM, &actual);
+		if (actual != this->shaderProgramPtr)
+			glUseProgram(shaderProgramPtr);
+	}
 
 	Shader::Shader(const char * vertexShader, const char * fragShader)
 	{

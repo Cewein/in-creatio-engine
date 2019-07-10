@@ -13,6 +13,11 @@ namespace Creatio
 {
 	class Camera {
 	private:
+
+		int width;
+		int height;
+		float fov;
+
 		glm::mat4 projection;
 		glm::mat4 view;
 
@@ -29,9 +34,12 @@ namespace Creatio
 
 		void updateFront();
 		void updateCamMouse(float offyw, float offptch);
+		void init();
 
 	public:
 		Camera(int width, int height);
+		Camera(int width, int height, float fov);
+		//Camera(int width, int);
 
 		//getter
 		inline glm::mat4 getView() { return view; }
@@ -42,6 +50,10 @@ namespace Creatio
 		inline float getSpeed() { return speed; }
 		inline float getDeltaSpeed() { return deltaSpeed; }
 		inline float getYaw() { return yaw; }
+
+		// setter
+		void setFov(float fov);
+		inline void setPosition(glm::vec3 pos) { position = pos; }
 
 		//miam miam c'est bon les pitchs
 		inline float getPitch() { return pitch; } 
