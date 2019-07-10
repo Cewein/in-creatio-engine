@@ -1,4 +1,4 @@
-# In creatio #
+# In creatio - UNDER FULL REWRITE #
 ### **we are not even in Alpha, not even in pre-Alpha.**
 ### intro
 **In creatio** is (as of now) a OpenGL 4.5 game engine. It will have a lot of feature.
